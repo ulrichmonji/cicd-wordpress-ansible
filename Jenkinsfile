@@ -2,10 +2,7 @@ pipeline {
      environment {
        ID_DOCKER = "choco1992"
        IMAGE_NAME = "static-website-ib"
-       IMAGE_TAG = "v1"
-/*       STAGING = "${ID_DOCKER}-staging"
-       PRODUCTION = "${ID_DOCKER}-production"
-*/       
+       IMAGE_TAG = "v1"  
        PRIVATE_KEY = credentials('private_keys_jenkins')
        DOCKERHUB_PASSWORD = credentials('dockerhubpassword')
      }
@@ -73,7 +70,7 @@ pipeline {
       steps {
           script {
             sh '''
-                echo $PRIVATE_KEY > id_rsa
+                cp  $PRIVATE_KEY  id_rsa
                 chmod 600 id_rsa
                 cd ansible 
                 ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=staging
