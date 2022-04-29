@@ -73,7 +73,7 @@ pipeline {
                script {
                  sh '''
                      cp  $PRIVATE_KEY  id_rsa
-                     chmod 600 id_rsa
+                     chmod 400 id_rsa
                      cd ansible 
                      ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=staging
                  '''
@@ -89,7 +89,7 @@ pipeline {
           script {
             sh '''
                 echo $PRIVATE_KEY > id_rsa
-                chmod 600 id_rsa
+                chmod 400 id_rsa
                 cd ansible 
                 ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=prod
             '''
