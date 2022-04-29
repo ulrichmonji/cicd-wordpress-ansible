@@ -12,4 +12,7 @@
         state: started
         restart: "yes"
         ports: "80:80"
+        env:
+        PORT: 80
+
 ...
