@@ -74,9 +74,10 @@ pipeline {
                  sh '''
                      cd $WORKSPACE
                      cp  $PRIVATE_KEY  id_rsa
-                     chmod 400 id_rsa
+                     chmod 600 id_rsa
                      cd ansible 
                      ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=staging
+                     rm -f ../id_rsa
                  '''
                }
            }
@@ -91,9 +92,10 @@ pipeline {
             sh '''
                 cd $WORKSPACE
                 cp  $PRIVATE_KEY  id_rsa
-                chmod 400 id_rsa
+                chmod 600 id_rsa
                 cd ansible 
                 ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=prod
+                rm -f ../id_rsa
             '''
           }
         }
