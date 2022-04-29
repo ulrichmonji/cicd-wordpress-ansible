@@ -3,7 +3,6 @@ pipeline {
        ID_DOCKER = "choco1992"
        IMAGE_NAME = "static-website-ib"
        IMAGE_TAG = "v1"  
-       /*PRIVATE_KEY = credentials('private_keys_jenkins') */
        DOCKERHUB_PASSWORD = credentials('dockerhubpassword')
      }
      agent none
@@ -63,20 +62,23 @@ pipeline {
      
      
      stage('Push image in staging and deploy it') {
-       when {
+       /*when {
               expression { GIT_BRANCH == 'origin/master' }
-            }
-      agent any
-      steps {
-          script {
-            sh '''
-                cp  $PRIVATE_KEY  id_rsa
-                chmod 600 id_rsa
-                cd ansible 
-                ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=staging
-            '''
-          }
-        }
+            }*/
+          environment {
+            PRIVATE_KEY = credentials('private_keys_jenkins')
+          }             
+           agent any
+           steps {
+               script {
+                 sh '''
+                     cp  $PRIVATE_KEY  id_rsa
+                     chmod 600 id_rsa
+                     cd ansible 
+                     ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=staging
+                 '''
+               }
+           }
      }
      stage('Push image in production and deploy it') {
        when {
