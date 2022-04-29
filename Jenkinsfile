@@ -6,6 +6,7 @@ pipeline {
 /*       STAGING = "${ID_DOCKER}-staging"
        PRODUCTION = "${ID_DOCKER}-production"
 */       
+       PRIVATE_KEY = credentials('private_keys_jenkins')
        DOCKERHUB_PASSWORD = credentials('dockerhubpassword')
      }
      agent none
@@ -72,7 +73,10 @@ pipeline {
       steps {
           script {
             sh '''
-                echo -e "Déploiement en staging à venir"
+                echo $PRIVATE_KEY > id_rsa
+                chmod 600 id_rsa
+                cd ansible 
+                ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=staging
             '''
           }
         }
@@ -82,11 +86,13 @@ pipeline {
               expression { GIT_BRANCH == 'origin/master' }
             }
       agent any
-
       steps {
           script {
             sh '''
-                echo -e "Déploiement en production à venir"
+                echo $PRIVATE_KEY > id_rsa
+                chmod 600 id_rsa
+                cd ansible 
+                ansible-playbook playbooks/deploy_app.yml  --private-key id_rsa -e env=prod
             '''
           }
         }
