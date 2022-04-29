@@ -3,8 +3,8 @@ pipeline {
        ID_DOCKER = "choco1992"
        IMAGE_NAME = "static-website-ib"
        IMAGE_TAG = "v1"  
-       PRIVATE_KEY = credentials('private_keys_jenkins')
-       DOCKERHUB_PASSWORD = credentials('dockerhubpassword')
+       /*PRIVATE_KEY = credentials('private_keys_jenkins')
+       DOCKERHUB_PASSWORD = credentials('dockerhubpassword')*/
      }
      agent none
      stages {
