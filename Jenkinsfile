@@ -61,44 +61,50 @@ pipeline {
       }     
      
      
-     stage('Push image in staging and deploy it') {
-       /*when {
-              expression { GIT_BRANCH == 'origin/master' }
-            }*/
-          environment {
-            PRIVATE_KEY = credentials('private_keys_jenkins')
-          }             
+     stage('Prepare ansible environment') {
+            agent any
+            environment {
+                PRIVATE_KEY = credentials('private_keys_jenkins')
+            }
+            steps {
+                sh '''
+                     cp  $PRIVATE_KEY  id_rsa
+                     chmod 600 id_rsa
+                '''
+            }
+     }          
+          
+     stage('Push image in staging and deploy it') { 
            agent any
            steps {
                script {
                  sh '''
-                     cd $WORKSPACE
-                     cp  $PRIVATE_KEY  id_rsa
-                     chmod 600 id_rsa
-                     cd ansible 
-                     ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=staging
-                     rm -f ../id_rsa
+                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=staging                   
                  '''
                }
            }
      }
      stage('Push image in production and deploy it') {
-       when {
+          when {
               expression { GIT_BRANCH == 'origin/master' }
-            }
-      agent any
-      steps {
-          script {
-            sh '''
-                cd $WORKSPACE
-                cp  $PRIVATE_KEY  id_rsa
-                chmod 600 id_rsa
-                cd ansible 
-                ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=prod
-                rm -f ../id_rsa
-            '''
           }
-        }
+          agent any
+          steps {
+               script {
+                 sh '''
+                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=prod
+                 '''
+               }
+          }
      }
+          
+     stage('Remove temp files') {
+            agent any
+            steps {
+                sh '''
+                     rm -fr $WORKSPACE/ansible/id_rsa
+                '''
+            }
+     }            
   }
 }
