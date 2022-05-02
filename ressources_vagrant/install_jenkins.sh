@@ -59,7 +59,7 @@ then
     sudo echo "jenkins        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/jenkins
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
-
+    systemctl restart jenkins
     echo -e "\nInstallation de ansible"
     yum install -y python3
     curl -sS https://bootstrap.pypa.io/pip/3.6/get-pip.py | sudo python3
