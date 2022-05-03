@@ -33,20 +33,23 @@ docker run --name cont_name -d -e PORT=80 -p 80:80 $ID_DOCKERUB/$IMAGE_NAME:$IMA
 - Un exemple d'inventaire, ansible.cfg, host_vars et group_vars sont fournis, vous pouvez vous en inspirer...
 - Le playbook d'installation de docker (docker.yml) est fourni dans le dossier "ressources ansible"
 - Un utilisateur jenkins existe sur les 3 machines crées, il sera utilisé comme user de connexion ansible
-    - Le répertoire personnel du user jenkins est "/var/lib/jenkins"  sur les 3 serveurs
+    - Le répertoire personnel du user jenkins est **/var/lib/jenkins**  sur les 3 serveurs
     - Cet utilisateur Jenkins ne possède pas de mot de passe, mais une paire de clés ssh.
-        - Le couple de clés se trouve donc dans /var/lib/jenkins/.ssh
+        - Le couple de clés se trouve donc dans **/var/lib/jenkins/.ssh**
         - La clés publique est disponible sur les serveurs worker1 et worker2
 
         - Pour passer la clés dans les commandes ansible, utiliser l'option : --private-key <fichier de la clés privée>
-            * Example : 
-                ansible all -m ping --private-key /var/lib/jenkins/.ssh/id_rsa 
-
-
-- !!!!!!  Si vous utilisez un agent docker pour l'étape de build!!!! , alors: 
+          * Example : 
+            ```
+            ansible all -m ping --private-key /var/lib/jenkins/.ssh/id_rsa
+            ```
     - la clés privée pourr être rajoutée comme secret dans le serveur jenkins, et être récupérée dans une variable
         * Exemple : 
-                PRIVATE_KEY = credentials('private_key')
+        ```
+        PRIVATE_KEY = credentials('private_key')
+        ```
     - Cette clé privée  pourrait être passée dans les commandes ansible pour se connecter aux machines, vous pouvez la récupéer dans votre projet si vous le souhaiter (c'est pas obloigatoire), comme suit : 
+        ```
         echo $PRIVATE_KEY > id_rsa
         chmod 600 id_rsa
+        ```
