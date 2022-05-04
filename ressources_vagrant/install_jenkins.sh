@@ -84,7 +84,8 @@ fi
 
 if [ \$1 == "worker" ]
 then 
-    echo -e "Nothing to do, it is a worker node"
+    sudo usermod -aG wheel jenkins
+    sudo echo "jenkins        ALL=(ALL)       NOPASSWD: ALL" > /etc/sudoers.d/jenkins
 fi
 EOF
 chmod +x /root/install_jenkins.sh
