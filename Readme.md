@@ -1,4 +1,4 @@
-# CICD du site web statique
+# Partie I : CICD du site web statique
 
 ## Prérequis
 - Docker
@@ -47,3 +47,60 @@ docker run --name cont_name -d -e PORT=80 -p 80:80 $ID_DOCKERUB/$IMAGE_NAME:$IMA
         echo $PRIVATE_KEY > id_rsa
         chmod 600 id_rsa
         ```
+
+# PARTIE II : Wordpress As Code avec ANSIBLE
+L'entreprise POZOS souhaite metre en place on site web vitrine.
+Elle fait appel à vos services afin de mettre en place le site à travers le CMS Wordpress. 
+
+## Architecture de Wordress
+L'application wordpress se découpe en deux grand modules 
+- Le frontend qui est la partie Vitrine. Généralement, on utilise du **apache/php**
+- Le backend qui est la partie Base de Donnée. On utilise généralement de **mysql**  ou **mariadb**
+
+POZOS vous recommande d'utiliser du **apache/php/mysql**, car ils sont très utilisés sur leurs infrastructures de prod.
+Ca tombe bien, la stack **LAMP** (***Linux, Apache, Mariadb, PHP***) serait idéale afin de répondre à cette problématique.
+
+POZOS souhaite profiter de ce projet pour adopter les bonnes pratiques agiles/DevOps, notamment l'Insfrastructure as Code **(IaC)**.
+Celà leur permettra de péréniser votre travail et pouvoir versionner leurs infrastrucure.
+
+Votre mission, si vous l'accepter est **d'automatiser le déploiement de wordpress à l'aide de Ansible**
+
+## Procédue d'installation de wordpress 
+Un exemple de procédure se trouve [ici](https://www.vultr.com/docs/how-to-install-wordpress-on-centos-7/#:~:text=To%20install%20WordPress%2C%20you%20need,from%20WordPress.org%20using%20wget.&text=Use%20wget%20to%20download%20the%20latest%20WordPress%20version.&text=Unzip%20the%20downloaded%20WordPress%20tar%20archive.&text=Now%2C%20move%20the%20extracted%20file,%2Fvar%2Fwww%2Fhtml%20.)
+#### Prérequis
+- OS : Linux Centos 7
+
+#### Installation de la stack LAMP
+- Installation et configuration du mysql/mariadb
+```
+sudo yum install -y mariadb-server
+```
+
+- Installation du package httpd
+```
+sudo yum install -y httpd 
+```
+- installation de PHP et ses extensions
+```
+sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo yum update -y
+sudo yum -y --enablerepo=remi-php74 install php php-bz2 php-mysql php-curl php-gd php-intl php-common php-mbstring php-xml
+sudo sudo systemctl restart httpd
+```
+
+- Installation de Wordpres
+```
+sudo yum install -y wget
+wget http://WordPress.org/latest.tar.gz
+sudo tar -xzvf latest.tar.gz
+sudo mv wordpress/* /var/www/html/
+sudo chown -R apache.apache /var/www/html/
+```
+
+- Démarrage des services apache(httpd) et mysql/mariadb
+```
+sudo systemctl start httpd
+sudo systemctl start mariadb
+sudo systemctl enable httpd
+sudo systemctl enable mariadb
+```
