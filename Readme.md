@@ -123,3 +123,7 @@ Un exemple de procédure se trouve [ici](https://www.vultr.com/docs/how-to-insta
      sudo systemctl enable httpd
      sudo systemctl enable mariadb
      ```
+6. Finalisation de l'installation dans le navigateur:
+   Pour celà, il faudrait aller dans votre navigateur et saisir l'une  des adresses suivantes : 
+   - http://**<votre_ip_machine/wordpress>** 
+   - http://**<votre_ip_machine>**

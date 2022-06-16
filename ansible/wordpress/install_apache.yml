@@ -46,7 +46,7 @@
     - name: "[apache] - start apache server "
       service:
         name: "{{ item }}"
-        state: restarted
+        state: started
         enabled: yes
       become: yes
       with_items:

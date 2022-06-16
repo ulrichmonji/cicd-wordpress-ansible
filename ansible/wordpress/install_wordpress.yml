@@ -13,25 +13,30 @@
         dest: "/var/www/html/"
         remote_src: yes
       when: check_wordpress.stat.exists == False 
+      become: yes
 
 
     - name: "[wordpress] - drop file default index.html"
       file:
         path: "/var/www/html/index.html"
         state: absent
+      become: yes
 
 
     - name: "[wordpress] - check if exist"
       stat:
         path: "/var/www/html/wordpress/wp-config-sample.php"
       register: check_sample
+      become: yes
 
     - name: "[wordpress] - rename wp-config-sample.php"
       command: cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
       when: check_sample.stat.exists == True
+      become: yes
 
 
     - name: "[wordpress] - modify wp-config.php"
+      become: yes
       lineinfile:
         dest: "/var/www/html/wordpress/wp-config.php"
         regexp: "{{ item.search }}"
