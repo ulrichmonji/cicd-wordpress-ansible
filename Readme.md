@@ -83,7 +83,7 @@ Un exemple de procédure se trouve [ici](https://www.vultr.com/docs/how-to-insta
 
         Pour se connecter à la base de donnée et la configurer,, taper la suide de commandes suivantes : 
         ```
-        [vagrant@client1 ~]$ myql -h  localhost -u root
+        [vagrant@client1 ~]$ mysql -h  localhost -u root
         MariaDB [(none)]> create database wordpress;
         MariaDB [(none)]> CREATE USER 'wordpress'@'localhost' IDENTIFIED BY 'wordpress';
         MariaDB [(none)]> use wordpress;

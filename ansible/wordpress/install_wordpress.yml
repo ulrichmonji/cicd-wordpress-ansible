@@ -1,5 +1,6 @@
 - name: "Setup wordpress"
   hosts: prod
+  tags: wordpress
   tasks:
     - name: "[wordpress] - check if exist"
       stat:

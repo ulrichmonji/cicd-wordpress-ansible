@@ -1,11 +1,11 @@
 ---
 - name: "Install database"
   hosts: prod
+  tags: database
   tasks:
-
     - name: "[database] - update server"
       yum:
-        name: *
+        name: '*'
         state: latest
       become: yes
 
@@ -16,7 +16,11 @@
       become: yes
       with_items:
         - mariadb-server
-        - mariadb-client
+        - python3
+        - python36-mysql
+        - python36-PyMySQL
+#        - python36-dev        
+#        - mariadb-client
 
     - name: "[database] - start mariadb server "
       service:
@@ -26,6 +30,7 @@
       become: yes
       with_items:
         - mariadb
+
 
     - name: "[database] - Create DB"
       mysql_db:
@@ -38,5 +43,4 @@
         password: "{{ mysql_password }}"
         priv: "*.*:ALL"
       become: yes
-
 

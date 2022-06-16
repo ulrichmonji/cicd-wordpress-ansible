@@ -1,5 +1,6 @@
 - name: "Install Apache/php server"
   hosts: prod
+  tags: apache
   tasks:
     - name: "[apache] - install apache server"
       yum:
@@ -8,6 +9,7 @@
       become: yes
       with_items:
         - httpd
+#        - libapache2-mod-php7.4
 
     - name: "[apache] - install php7 repositories"
       yum:
@@ -17,7 +19,7 @@
     
     - name: "[apache] - update server"
       yum:
-        name: *
+        name: '*'
         state: latest
       become: yes      
     
