@@ -1,0 +1,51 @@
+- name: "Install Apache/php server"
+  hosts: prod
+  tasks:
+    - name: "[apache] - install apache server"
+      yum:
+        name: "{{ item }}"
+        state: present
+      become: yes
+      with_items:
+        - httpd
+
+    - name: "[apache] - install php7 repositories"
+      yum:
+        name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+        state: present
+      become: yes
+    
+    - name: "[apache] - update server"
+      yum:
+        name: *
+        state: latest
+      become: yes      
+    
+    - name: "[apache] - Intall php7 extensions"
+      yum:
+        name: "{{ item }}"
+        state: latest
+        enablerepo: "remi-php74"
+      become: yes      
+      
+      with_items:
+        - php 
+        - php-bz2 
+        - php-mysql 
+        - php-curl 
+        - php-gd 
+        - php-intl 
+        - php-common 
+        - php-mbstring 
+        - php-xml
+
+
+
+    - name: "[apache] - start apache server "
+      service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+      become: yes
+      with_items:
+        - httpd

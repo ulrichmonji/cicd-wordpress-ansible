@@ -69,38 +69,57 @@ Votre mission, si vous l'accepter est **d'automatiser le déploiement de wordpre
 Un exemple de procédure se trouve [ici](https://www.vultr.com/docs/how-to-install-wordpress-on-centos-7/#:~:text=To%20install%20WordPress%2C%20you%20need,from%20WordPress.org%20using%20wget.&text=Use%20wget%20to%20download%20the%20latest%20WordPress%20version.&text=Unzip%20the%20downloaded%20WordPress%20tar%20archive.&text=Now%2C%20move%20the%20extracted%20file,%2Fvar%2Fwww%2Fhtml%20.)
 #### Prérequis
 - OS : Linux Centos 7
+- Privilèges administrateurs sur la Machine
+
 
 #### Installation de la stack LAMP
-- Installation et configuration du mysql/mariadb
-```
-sudo yum install -y mariadb-server
-```
+1. Installation et configuration du mysql/mariadb
+   1. Installation de mariadb : 
+        ```
+        [vagrant@client1 ~]$ sudo yum install -y mariadb-server
+        ```
+    2. Connexion à la base de donnée  et creation du schema BDD + user wordpress
+        > :warning: Initialement, l'utilisateur **root** de la base de donnée **ne possède pas de mot de passe**, à vous de définir son mot de passe.
 
-- Installation du package httpd
-```
-sudo yum install -y httpd 
-```
-- installation de PHP et ses extensions
-```
-sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-sudo yum update -y
-sudo yum -y --enablerepo=remi-php74 install php php-bz2 php-mysql php-curl php-gd php-intl php-common php-mbstring php-xml
-sudo sudo systemctl restart httpd
-```
+        Pour se connecter à la base de donnée et la configurer,, taper la suide de commandes suivantes : 
+        ```
+        [vagrant@client1 ~]$ myql -h  localhost -u root
+        MariaDB [(none)]> create database wordpress;
+        MariaDB [(none)]> CREATE USER 'wordpress'@'localhost' IDENTIFIED BY 'wordpress';
+        MariaDB [(none)]> use wordpress;
+        MariaDB [wordpress]> GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost';        
+        MariaDB [myexample]>EXIT
+        ```
 
-- Installation de Wordpres
-```
-sudo yum install -y wget
-wget http://WordPress.org/latest.tar.gz
-sudo tar -xzvf latest.tar.gz
-sudo mv wordpress/* /var/www/html/
-sudo chown -R apache.apache /var/www/html/
-```
+2. Installation du serveur web **apache**
+    ```
+    sudo yum install -y httpd 
+    ```
+3. Installation de **PHP**
+   1. Installation des repos pour php7 + mise à jours du système: 
+        ```
+        sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+        sudo yum update -y
+        ```
+    1. Installation de php7 et ses extensions 
+        ```
+        sudo yum -y --enablerepo=remi-php74 install php php-bz2 php-mysql php-curl php-gd php-intl php-common php-mbstring php-xml
+        sudo sudo systemctl restart httpd
+        ```
 
-- Démarrage des services apache(httpd) et mysql/mariadb
-```
-sudo systemctl start httpd
-sudo systemctl start mariadb
-sudo systemctl enable httpd
-sudo systemctl enable mariadb
-```
+4. Installation de Wordpres
+     ```
+     sudo yum install -y wget
+     wget http://WordPress.org/latest.tar.gz
+     sudo tar -xzvf latest.tar.gz
+     sudo mv wordpress/* /var/www/html/
+     sudo chown -R apache.apache /var/www/html/
+     ```
+
+5. Démarrage des services apache(httpd) et mysql/mariadb
+     ```
+     sudo systemctl start httpd
+     sudo systemctl start mariadb
+     sudo systemctl enable httpd
+     sudo systemctl enable mariadb
+     ```

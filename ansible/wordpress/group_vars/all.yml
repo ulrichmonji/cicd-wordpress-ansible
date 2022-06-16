@@ -1,0 +1,15 @@
+# wordpress
+wordpress_source: "https://wordpress.org/latest.tar.gz"
+mysql_db: wordpress_db
+mysql_user: wordpress
+mysql_password: wordpress
+
+# ssh 
+ansible_password: vagrant
+ansible_user: vagrant
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+
+
+
+

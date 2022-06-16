@@ -1,0 +1,10 @@
+---
+- name: "[Database] Install  mariadb"
+  import_playbook: install_database.yml
+
+- name: "[apache] Install apache server"
+  import_playbook: install_apache.yml
+
+- name: "[wordpress] Install wordpress"
+  import_playbook: install_wordpress.yml  
+...

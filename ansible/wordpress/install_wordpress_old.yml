@@ -1,0 +1,35 @@
+- name: "Setup wordpress"
+  hosts: prod
+  tasks:
+    - name: "[wordpress] - install wget"
+      yum:
+        name: "{{ item }}"
+        state: present
+      become: yes
+      with_items:
+        - wget
+
+
+    - name: "[wordpress]"  download wordpress archive
+      get_url:
+        url: http://WordPress.org/latest.tar.gz
+        dest: /tmp/latest.tar.gz
+    
+    - name: "[wordpress]" Extract /tmp/latest.tar.gz into  /tmp
+      ansible.builtin.unarchive:
+        src: /tmp/latest.tar.gz
+        dest: /tmp
+
+    - name: "[wordpress]" Copy /tmp/wordpress/* file on the remote machine to 
+      ansible.builtin.shell: "mv /tmp/wordpress/*  /var/www/html/ && sudo chown -R apache.apache /var/www/html/"
+      become: yes
+    
+    - name: "[wordpress] - restart mariadb and apache servers "
+      service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+      become: yes
+      with_items:
+        - mariadb
+        - httpd      
