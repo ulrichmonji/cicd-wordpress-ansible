@@ -31,7 +31,7 @@ pipeline {
            steps {
               script {
                 sh '''
-                    curl http://jenkins | grep -i "dimension"
+                    curl http://172.17.0.1 | grep -i "dimension"
                 '''
               }
            }
