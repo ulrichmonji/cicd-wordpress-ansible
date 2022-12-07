@@ -68,18 +68,21 @@ pipeline {
             }
             steps {
                 sh '''
-                     cp  $PRIVATE_KEY  id_rsa
-                     chmod 600 id_rsa
+                     cp  $PRIVATE_KEY  devops-ulrich.pem
+                     chmod 600 devops-ulrich.pem
                 '''
             }
      }          
           
      stage('Push image in staging and deploy it') { 
+          when {
+              expression { GIT_BRANCH == 'origin/live_07-12-2023' } 
+          }          
            agent any
            steps {
                script {
                  sh '''
-                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=staging                   
+                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../devops-ulrich.pem -e env=staging                   
                  '''
                }
            }
@@ -92,7 +95,7 @@ pipeline {
           steps {
                script {
                  sh '''
-                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../id_rsa -e env=prod
+                     cd $WORKSPACE/ansible && ansible-playbook playbooks/deploy_app.yml  --private-key ../devops-ulrich.pem -e env=prod
                  '''
                }
           }
@@ -102,7 +105,7 @@ pipeline {
             agent any
             steps {
                 sh '''
-                     rm -fr $WORKSPACE/ansible/id_rsa
+                     rm -fr $WORKSPACE/ansible/devops-ulrich.pem
                 '''
             }
      }            
